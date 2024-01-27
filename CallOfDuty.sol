@@ -34,6 +34,7 @@ contract CallOfDuty is ERC20("CallOfDuty", "COD"), Ownable(msg.sender) {
     }
 
     function redeemPrizes() public {
+        require(!prizeRedeemed[msg.sender],"prize already redeemed");
         prizeRedeemed[msg.sender] = true;
     }
 
