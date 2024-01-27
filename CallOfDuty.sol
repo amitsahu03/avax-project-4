@@ -8,21 +8,33 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract CallOfDuty is ERC20("CallOfDuty", "COD"), Ownable(msg.sender) {
 
     uint256 public currAmmo = 10;
+    mapping(address =>uint256 ) prize;
+    mapping(address =>bool ) prizeRedeemed;
 
     constructor() {
         _mint(msg.sender, currAmmo);
     }
 
-    function buyAmmo(uint256 ammo) public onlyOwner {
+    function buyAmmo(uint256 ammo) public  {
         _mint(msg.sender, ammo);
+        currAmmo += ammo;
     }
 
-    function shootEnimies(uint256 enemy ) public onlyOwner{
+    function shootEnimies(uint256 enemy ) public {
         require(currAmmo>0, "not enough ammo");
         require(enemy>0,"enemy shot down must be greater than 0");
 
         currAmmo -= enemy;
         _burn(msg.sender,enemy);
+    }
+
+    function addPrizes(address addr,uint256 prz) public onlyOwner{
+        prize[addr] = prz;
+        prizeRedeemed[addr] = false;
+    }
+
+    function redeemPrizes() public {
+        prizeRedeemed[msg.sender] = true;
     }
 
 }
